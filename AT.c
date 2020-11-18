@@ -50,9 +50,7 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 				}
 
 				default: {
-					at_error.state_number = 2;
-					strcpy(at_error.error_message, "Error at state 2");
-					return STATE_MACHINE_READY_WITH_ERROR;
+					state = 6;
 				}
 			}
 			break;
@@ -262,6 +260,70 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 				strcpy(at_error.error_message, "Error at state 54");
 				return STATE_MACHINE_READY_WITH_ERROR;
 			}
+		}
+
+		case 6: {
+			if (current_character != 0x0D){
+				state = 30;
+				if(string_size < AT_COMMAND_MAX_LINE_SIZE)
+					at_command_data.data[at_command_data.line_count][string_size++] = current_character;
+			}
+			else
+				state = 60;
+			break;
+		}
+
+		case 60:{
+			if (current_character == 0x0A){
+				state = 61;
+				at_command_data.data[at_command_data.line_count][string_size] = 0x0A;
+				string_size = 0;
+				at_command_data.line_count++;
+			}
+			else{
+				at_error.state_number = 60;
+				strcpy(at_error.error_message, "Error at state 60");
+				return STATE_MACHINE_READY_WITH_ERROR;
+			}
+			break;
+		}
+
+		case 61: {
+			if (current_character != 0x0D){
+				state = 6;
+			}
+			else
+				state = 62;
+			break;
+		}
+
+		case 62: {
+			if (current_character == 0x0A){
+				state = 63;
+			}
+			else{
+				at_error.state_number = 62;
+				strcpy(at_error.error_message, "Error at state 62");
+				return STATE_MACHINE_READY_WITH_ERROR;
+			}
+			break;
+		}
+
+		case 63: {
+			if (current_character == 'O'){
+				state = 4;
+				at_command_data.data[at_command_data.line_count][string_size++] = 'O';
+			}
+			else if (current_character == 'E'){
+				state = 5;
+				at_command_data.data[at_command_data.line_count][string_size++] = 'E';
+			}
+			else{
+				at_error.state_number = 34;
+				strcpy(at_error.error_message, "Error at state 34");
+				return STATE_MACHINE_READY_WITH_ERROR;
+			}
+			break;
 		}
 
 		//case 100: {
