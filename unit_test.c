@@ -35,7 +35,7 @@ void parse_file(char *filename){
 
 		printf("\n");
 
-		for (int i = 0; i <= at_command_data.line_count - 1; i++){
+		for (int i = 0; i <= at_command_data.line_count - 1 && i < AT_COMMAND_MAX_LINE; i++){
 			int j = 0;
 			do{
 					printf("%c", at_command_data.data[i][j++]);

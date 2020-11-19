@@ -41,16 +41,22 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 
 				case 'O': {
 					state = 4;
+					if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+						at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 					break;
 				}
 
 				case 'E': {
 					state = 5;
+					if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+						at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 					break;
 				}
 
 				default: {
 					state = 6;
+					if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+						at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 				}
 			}
 			break;
@@ -59,6 +65,7 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 3: {
 			if (current_character != 0x0D){
 				state = 30;
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
 				at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 			}
 			else{
@@ -72,7 +79,7 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 30:{
 			if (current_character != 0x0D){
 				state = 30;
-				if(string_size < AT_COMMAND_MAX_LINE_SIZE)
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
 					at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 
 			}
@@ -85,7 +92,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 31: {
 			if (current_character == 0x0A){
 				state = 32;
-				at_command_data.data[at_command_data.line_count][string_size] = 0x0A;
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size] = 0x0A;
 				string_size = 0;
 				at_command_data.line_count++;
 			}
@@ -127,11 +135,13 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 34: {
 			if (current_character == 'O'){
 				state = 4;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'O';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'O';
 			}
 			else if (current_character == 'E'){
 				state = 5;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'E';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'E';
 			}
 			else{
 				at_error.state_number = 34;
@@ -141,14 +151,12 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		}
 
 		case 4:{
-			printf("%c\n", current_character);
 			if (current_character == 'K'){
 				state = 40;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'K';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'K';
 			}
 			else{
-				at_error.state_number = 4;
-				strcpy(at_error.error_message, "Error at state 4");
 				return STATE_MACHINE_READY_WITH_ERROR;
 			}
 			break;
@@ -168,9 +176,9 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 
 		case 41: {
 			if (current_character == 0x0A){
-				//state = 100;
 				state = 0;
-				at_command_data.data[at_command_data.line_count][string_size++] = 0x0A;
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 0x0A;
 				at_command_data.line_count++;
 				string_size = 0;
 				return STATE_MACHINE_READY_OK;
@@ -186,7 +194,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 5: {
 			if (current_character == 'R'){
 				state = 50;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'R';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'R';
 			}
 			else{
 				at_error.state_number = 5;
@@ -199,7 +208,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 50: {
 			if (current_character == 'R'){
 				state = 51;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'R';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'R';
 			}
 			else{
 				at_error.state_number = 50;
@@ -212,7 +222,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 51: {
 			if (current_character == 'O'){
 				state = 52;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'O';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'O';
 			}
 			else{
 				at_error.state_number = 51;
@@ -225,7 +236,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 52: {
 			if (current_character == 'R'){
 				state = 53;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'R';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'R';
 			}
 			else{
 				at_error.state_number = 52;
@@ -248,16 +260,14 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 
 		case 54: {
 			if (current_character == 0x0A){
-				//state = 404;
 				state = 0;
-				at_command_data.data[at_command_data.line_count][string_size++] = 0x0A;
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 0x0A;
 				at_command_data.line_count++;
 				string_size = 0;
 				return STATE_MACHINE_READY_WITH_ERROR;
 			}
 			else {
-				at_error.state_number = 54;
-				strcpy(at_error.error_message, "Error at state 54");
 				return STATE_MACHINE_READY_WITH_ERROR;
 			}
 		}
@@ -265,7 +275,7 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 6: {
 			if (current_character != 0x0D){
 				state = 30;
-				if(string_size < AT_COMMAND_MAX_LINE_SIZE)
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
 					at_command_data.data[at_command_data.line_count][string_size++] = current_character;
 			}
 			else
@@ -276,7 +286,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 60:{
 			if (current_character == 0x0A){
 				state = 61;
-				at_command_data.data[at_command_data.line_count][string_size] = 0x0A;
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size] = 0x0A;
 				string_size = 0;
 				at_command_data.line_count++;
 			}
@@ -312,7 +323,8 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 		case 63: {
 			if (current_character == 'O'){
 				state = 4;
-				at_command_data.data[at_command_data.line_count][string_size++] = 'O';
+				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
+					at_command_data.data[at_command_data.line_count][string_size++] = 'O';
 			}
 			else if (current_character == 'E'){
 				state = 5;
@@ -325,18 +337,6 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 			}
 			break;
 		}
-
-		//case 100: {
-			//state = 0;
-			//return STATE_MACHINE_READY_OK;
-			//break;
-		//}
-
-		//case 404: {
-			//state = 0;
-			//return STATE_MACHINE_READY_WITH_ERROR;
-			//break;
-		//}
 	}
 
 	return STATE_MACHINE_NOT_READY;
