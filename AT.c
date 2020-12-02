@@ -148,6 +148,9 @@ STATE_MACHINE_RETURN_VALUE at_command_parse(uint8_t current_character){
 				if(at_command_data.line_count < AT_COMMAND_MAX_LINE && string_size < AT_COMMAND_MAX_LINE_SIZE - 1)
 					at_command_data.data[at_command_data.line_count][string_size++] = 'E';
 			}
+			else if (current_character == '+'){
+				state = 3;
+			}
 			else{
 				at_error.state_number = 34;
 				strcpy(at_error.error_message, "Error at state 34");
