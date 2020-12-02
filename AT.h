@@ -5,8 +5,8 @@
 #define __AT_H
 
 
-#define AT_COMMAND_MAX_LINE 100
-#define AT_COMMAND_MAX_LINE_SIZE 128
+#define AT_COMMAND_MAX_LINE 10000
+#define AT_COMMAND_MAX_LINE_SIZE 12800
 #define MAX_ERROR_MESSAGE_LEN 200
 
 typedef struct{
